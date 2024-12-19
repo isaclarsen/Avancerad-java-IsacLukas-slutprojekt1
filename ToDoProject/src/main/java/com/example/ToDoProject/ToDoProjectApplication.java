@@ -9,4 +9,5 @@ public class ToDoProjectApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ToDoProjectApplication.class, args);
 	}
+
 }
