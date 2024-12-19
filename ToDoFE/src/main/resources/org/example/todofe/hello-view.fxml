@@ -1,16 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.todofe.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="657.0" prefWidth="385.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane layoutY="-1.0" prefHeight="75.0" prefWidth="385.0">
+         <children>
+            <Text layoutX="91.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ToDo" textAlignment="CENTER" wrappingWidth="203.63671875">
+               <font>
+                  <Font name="Cambria Bold" size="45.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane layoutY="74.0" prefHeight="198.0" prefWidth="385.0">
+         <children>
+            <TextField fx:id="input_Task" layoutX="14.0" layoutY="24.0" prefHeight="39.0" prefWidth="243.0" promptText="Enter Task" />
+            <TextField fx:id="input_Description" layoutX="14.0" layoutY="74.0" prefHeight="39.0" prefWidth="243.0" promptText="Enter Description" />
+            <TextField fx:id="input_TaskID" layoutX="14.0" layoutY="123.0" prefHeight="39.0" prefWidth="243.0" promptText="Enter ID" />
+            <Button layoutX="296.0" layoutY="74.0" mnemonicParsing="false" onAction="#addTask" prefHeight="39.0" prefWidth="75.0" text="ADD TASK" />
+            <Button layoutX="296.0" layoutY="123.0" mnemonicParsing="false" onAction="#editTask" prefHeight="39.0" prefWidth="75.0" text="EDIT TASK" />
+         </children>
+      </Pane>
+      <TableView layoutY="272.0" prefHeight="285.0" prefWidth="385.0">
+        <columns>
+          <TableColumn fx:id="input_TableID" prefWidth="50.0" text="#" />
+          <TableColumn fx:id="input_TableTaskName" prefWidth="165.0" text="TASK NAME" />
+            <TableColumn fx:id="input_TableDesc" prefWidth="169.0" text="DESCRIPTION" />
+        </columns>
+      </TableView>
+      <Pane layoutY="557.0" prefHeight="100.0" prefWidth="385.0">
+         <children>
+            <TextField fx:id="input_TaskID2" layoutX="14.0" layoutY="31.0" prefHeight="39.0" prefWidth="243.0" promptText="Enter ID " />
+            <Button layoutX="296.0" layoutY="31.0" mnemonicParsing="false" onAction="#deleteTask" prefHeight="39.0" prefWidth="75.0" text="DELETE" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
