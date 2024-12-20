@@ -5,13 +5,13 @@ public class ToDo {
     private String title;
     private String description;
 
-    public ToDo(String title, String description, int id) {
+    public ToDo(int id, String title, String description) {
         this.id = id;
         this.title = title;
         this.description = description;
     }
     //Getter för id
-    public int setId(){
+    public int getId(){
         return id;
     }
 
