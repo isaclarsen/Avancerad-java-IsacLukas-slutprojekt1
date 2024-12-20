@@ -20,15 +20,15 @@ public class ToDoController {
     toDos.add(new ToDo(2, "Read a book", "Read 50 pages of Harry Potter"));
     }
 
-    //Get för alla todos
+    //Get för alla tasks
     @GetMapping
-    public List<ToDo> getAllToDos(){
+    public List<ToDo> getAllTasks(){
         return toDos;
     }
 
-    //Get för todos med ID
+    //Get för tasks med ID
     @GetMapping("/{id}")
-    public ResponseEntity<ToDo> getToDoById(@PathVariable int id){
+    public ResponseEntity<ToDo> getTaskById(@PathVariable int id){
         for (ToDo toDo : toDos) {
             if (toDo.getId() == id) {
                 return new ResponseEntity<>(toDo, HttpStatus.OK);
@@ -38,13 +38,43 @@ public class ToDoController {
 
     }
 
-    //Post todos
+    //Post tasks
     @PostMapping
-    public ResponseEntity<ToDo> createToDo(@RequestBody ToDo toDo){
+    public ResponseEntity<ToDo> createTask(@RequestBody ToDo toDo){
         if (toDo.getId() != 0) {
             toDos.add(toDo);
             return new ResponseEntity<>(toDo, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    //Put för tasks
+    @PutMapping("/{id}")
+    public ResponseEntity<ToDo> updateTask(@PathVariable int id, @RequestBody ToDo updatedTask){
+        for (ToDo toDo : toDos) {
+            if (toDo.getId() == id) {
+                toDo.setTitle(updatedTask.getTitle());
+                toDo.setDescription(updatedTask.getDescription());
+                return ResponseEntity.ok(toDo);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    //Delete för tasks
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTaskById(@PathVariable int id){
+        boolean removed = false;
+        for(int i = 0; i < toDos.size(); i++) {
+            if (toDos.get(i).getId() == id){
+                toDos.remove(i);
+                removed = true;
+            }
+        }
+        if (removed) {
+            return ResponseEntity.ok("Task with ID: " + id + " was deleted!");
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task with ID: " + id + " was not deleted!");
+        }
     }
 }
