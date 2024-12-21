@@ -5,13 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -30,7 +29,7 @@ public class HelloController {
         private TableColumn<Task, Integer> columnTaskId;
 
         @FXML
-        private TableColumn<Task, String> columnTaskName;
+        private TableColumn<Task, String> columnTaskTitle;
 
         @FXML
         private TextField input_Task;
@@ -39,7 +38,12 @@ public class HelloController {
         private TextField input_TaskID;
 
         @FXML
+        private TextArea input_textArea;
+
+        @FXML
         private TextField input_TaskID2;
+
+
 
         private ObservableList<Task> taskList = FXCollections.observableArrayList();
 
@@ -48,11 +52,11 @@ public class HelloController {
         void addTask(javafx.event.ActionEvent actionEvent) {
 
                 try {
-                    String taskName = input_Task.getText();
+                    String taskTitle = input_Task.getText();
                     String description = input_Description.getText();
                     int taskId = Integer.parseInt(input_TaskID.getText());
 
-                    if (taskName.isEmpty() || description.isEmpty()) {
+                    if (taskTitle.isEmpty() || description.isEmpty()) {
                         showErrorMessage("Please fill in both the task name and description. ");
                         return;
                     }
@@ -65,32 +69,68 @@ public class HelloController {
                     connection.setDoOutput(true);
 
                     String toDoJson = String.format(
-                            "{\"id\":\"%s\",\"name\":\"%s\",\"description\":\"%s\"}",
-                            taskId, taskName, description);
+                            "{\"id\":%d,\"title\":\"%s\",\"description\":\"%s\"}",
+                            taskId, taskTitle, description);
+                    System.out.println("JSON to send: " + toDoJson);
 
                     try (OutputStream os = connection.getOutputStream()) {
                         os.write(toDoJson.getBytes());
                         os.flush();
-
                     }
+//                    int responseCode = connection.getResponseCode();
+//                    String responseMessage = connection.getResponseMessage();
+////                    System.out.println("Response Code: " + responseCode);
+////                    System.out.println("Response Message: " + responseMessage);
 
+                    if (connection.getResponseCode() == 201) {
+                        try (InputStream is = connection.getInputStream()) {
+                            String response2 = new BufferedReader(new InputStreamReader(is))
+                                    .lines()
+                                    .reduce("", (acc, line) -> acc + line + "\n");
+
+                            if (!response2.isEmpty()) {
+                                System.out.println("Response body: " + response2);
+
+                                Task newTask = new Task(taskId, taskTitle, description);
+                                taskList.add(newTask);
+                            } else {
+                                Task newTask = new Task(taskId, taskTitle, description);
+                                taskList.add(newTask);
+                                System.out.println("No response body but task added locally");
+                            }
+                            input_Task.clear();
+                            input_TaskID.clear();
+                            input_Description.clear();
+                        }
+                    } else {
+                        InputStream errorStream = connection.getErrorStream();
+                        String errorResponse = errorStream != null ? readResponse(connection) : "No response body available.";
+                        showErrorMessage("Failed to add task: " + errorResponse);
+                    }
                     if (connection.getResponseCode() == 200 && connection.getResponseCode() < 300) {
-                        taskList.add(new Task(taskId, taskName, description));
+                        Task newTask = new Task(taskId, taskTitle, description);
+                        taskList.add(newTask);
+                        System.out.println("Added task: " + newTask.getTitle());
 
                         input_Task.clear();
                         input_TaskID.clear();
                         input_Description.clear();
 
-                    } else {
-                        String errorResponse = readResponse(connection);
-
-                        showErrorMessage("Failed to add task: " + errorResponse);
+//                    } else {
+//                        InputStream errorStream = connection.getErrorStream();
+//                        String errorResponse = errorStream != null ? readResponse(connection) : "No response body available.";
+//                        showErrorMessage("Failed to add task: " + errorResponse);
                     }
 
                 } catch (NumberFormatException e) {
                     showErrorMessage("Task Id must be a valid number. ");
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    showErrorMessage("Network error " + e.getMessage());
+                    e.printStackTrace();
                 } catch (Exception e) {
-                    showErrorMessage("Error " + e.getMessage());
+                    showErrorMessage("Unexpected error " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
 
@@ -99,37 +139,73 @@ public class HelloController {
         void deleteTask(javafx.event.ActionEvent actionEvent) {
 
 
+
         }
 
         @FXML
         void editTask(javafx.event.ActionEvent actionEvent ) {
 
+
+
+
+
         }
 
         private String readResponse(HttpURLConnection connection) throws IOException {
-            BufferedReader reader;
-            if (connection.getResponseCode() == 200 && connection.getResponseCode() < 300) {
-                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            } else {
-                reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            InputStream stream = connection.getInputStream();
+            if (stream == null) {
+                return "";
             }
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                return response.toString();
             }
-            reader.close();
-            return response.toString();
+
+
+//            BufferedReader reader;
+//            if (connection.getResponseCode() == 200 && connection.getResponseCode() < 300) {
+//                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//            } else {
+//                reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+//            }
+//            StringBuilder response = new StringBuilder();
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                response.append(line);
+//            }
+//            reader.close();
+//            return response.toString();
         }
 
 
         @FXML
         public void initialize(){ // Fick kolla på en video för att implementera denna metod för taskTable
 
+            System.out.println("Initializing...");
             columnTaskId.setCellValueFactory(new PropertyValueFactory<>("id"));
             columnTaskDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-            columnTaskName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            columnTaskTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+//      Lade in detta efter jag blev klar med addTask metoden
+//            columnTaskTitle.setCellFactory(TextFieldTableCell.forTableColumn());
+//            columnTaskTitle.setOnEditCommit(event -> {
+//                Task editedTask = event.getRowValue();
+//                editedTask.setTitle(event.getNewValue());
+//                editTask(editedTask);
+//            });
+//
+//            columnTaskDescription.setCellFactory(TextFieldTableCell.forTableColumn());
+//            columnTaskDescription.setOnEditCommit(event -> {
+//                Task editedTask = event.getRowValue();
+//                editedTask.setDescription(event.getNewValue());
+//                editTask(editedTask);
+//            });
             taskTable.setItems(taskList);
+            System.out.println("Task list initialized with " + taskList.size() + " tasks.");
 
         }
 

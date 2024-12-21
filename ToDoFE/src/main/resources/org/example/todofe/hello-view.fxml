@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
@@ -12,6 +13,7 @@
 
 <VBox alignment="CENTER" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.todofe.HelloController">
    <children>
+      <TextArea fx:id="input_textArea" prefHeight="200.0" prefWidth="200.0" />
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="657.0" prefWidth="385.0">
          <children>
             <Pane layoutY="-1.0" prefHeight="75.0" prefWidth="385.0">
@@ -35,7 +37,7 @@
             <TableView fx:id="taskTable" layoutY="272.0" prefHeight="285.0" prefWidth="385.0">
               <columns>
                 <TableColumn fx:id="columnTaskId" prefWidth="50.0" text="#" />
-                <TableColumn fx:id="columnTaskName" prefWidth="165.0" text="TASK NAME" />
+                <TableColumn fx:id="columnTaskTitle" prefWidth="165.0" text="TASK NAME" />
                   <TableColumn fx:id="columnTaskDescription" prefWidth="169.0" text="DESCRIPTION" />
               </columns>
             </TableView>
