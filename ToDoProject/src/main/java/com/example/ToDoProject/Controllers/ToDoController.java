@@ -43,6 +43,7 @@ public class ToDoController {
     public ResponseEntity<ToDo> createTask(@RequestBody ToDo toDo){
         if (toDo.getId() != 0) {
             toDos.add(toDo);
+            System.out.println("Task created: " + toDo);
             return new ResponseEntity<>(toDo, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
