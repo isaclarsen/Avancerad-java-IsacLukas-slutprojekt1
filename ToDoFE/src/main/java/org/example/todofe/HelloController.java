@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -36,12 +35,6 @@ public class HelloController {
 
         @FXML
         private TextField input_TaskID;
-
-        @FXML
-        private TextArea input_textArea;
-
-        @FXML
-        private TextField input_TaskID2;
 
 
         private ObservableList<Task> taskList = FXCollections.observableArrayList();
@@ -211,21 +204,6 @@ public class HelloController {
                 }
                 return response.toString();
             }
-
-
-//            BufferedReader reader;
-//            if (connection.getResponseCode() == 200 && connection.getResponseCode() < 300) {
-//                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//            } else {
-//                reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-//            }
-//            StringBuilder response = new StringBuilder();
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                response.append(line);
-//            }
-//            reader.close();
-//            return response.toString();
         }
 
 
