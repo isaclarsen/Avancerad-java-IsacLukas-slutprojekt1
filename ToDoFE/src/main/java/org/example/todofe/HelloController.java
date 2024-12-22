@@ -135,14 +135,37 @@ public class HelloController {
             }
 
 
-        @FXML
-        void deleteTask(javafx.event.ActionEvent actionEvent) {
-
-
-
+    @FXML
+    void deleteTask(javafx.event.ActionEvent actionEvent) {
+        //Kolla vilken task som är markerad
+        Task selectedTask = taskTable.getSelectionModel().getSelectedItem();
+        if (selectedTask == null) {
+            showErrorMessage("No task selected. Please select a task to delete.");
+            return;
         }
+        //Skapa en variabel som sparar ID från tasken man har markerat
+        int taskId = selectedTask.getId();
 
-        @FXML
+        try {
+            URL url = new URL("http://localhost:8080/api/tasks/" + taskId);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+
+            if (connection.getResponseCode() == 200 || connection.getResponseCode() == 204) {
+                taskList.remove(selectedTask);
+                System.out.println("Task with ID: " + taskId + " deleted successfully.");
+            } else {
+                String errorResponse = readResponse(connection);
+                showErrorMessage("Failed to delete task. Error: " + errorResponse);
+            }
+
+        } catch (IOException e) {
+            showErrorMessage("Network error while deleting task: " + e.getMessage());
+        }
+    }
+
+
+    @FXML
         void editTask(javafx.event.ActionEvent actionEvent ) {
 
 
