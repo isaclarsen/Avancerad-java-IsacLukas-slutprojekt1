@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
@@ -11,14 +10,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.todofe.HelloController">
+<VBox alignment="CENTER" prefHeight="709.0" prefWidth="499.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.todofe.HelloController">
    <children>
-      <TextArea fx:id="input_textArea" prefHeight="200.0" prefWidth="200.0" />
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="657.0" prefWidth="385.0">
          <children>
-            <Pane layoutY="-1.0" prefHeight="75.0" prefWidth="385.0">
+            <Pane layoutY="14.0" prefHeight="48.0" prefWidth="385.0">
                <children>
-                  <Text layoutX="91.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ToDo" textAlignment="CENTER" wrappingWidth="203.63671875">
+                  <Text layoutX="91.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ToDo" textAlignment="CENTER" wrappingWidth="203.63671875">
                      <font>
                         <Font name="Cambria Bold" size="45.0" />
                      </font>
@@ -27,24 +25,23 @@
             </Pane>
             <Pane layoutY="74.0" prefHeight="198.0" prefWidth="385.0">
                <children>
-                  <TextField fx:id="input_Task" layoutX="14.0" layoutY="24.0" prefHeight="39.0" prefWidth="243.0" promptText="Enter Task" />
-                  <TextField fx:id="input_Description" layoutX="14.0" layoutY="74.0" prefHeight="39.0" prefWidth="243.0" promptText="Enter Description" />
-                  <TextField fx:id="input_TaskID" layoutX="14.0" layoutY="123.0" prefHeight="39.0" prefWidth="243.0" promptText="Enter ID" />
-                  <Button layoutX="296.0" layoutY="74.0" mnemonicParsing="false" onAction="#addTask" prefHeight="39.0" prefWidth="75.0" text="ADD TASK" />
-                  <Button layoutX="296.0" layoutY="123.0" mnemonicParsing="false" onAction="#editTask" prefHeight="39.0" prefWidth="75.0" text="EDIT TASK" />
+                  <TextField fx:id="input_Task" layoutX="14.0" prefHeight="39.0" prefWidth="357.0" promptText="Enter Task" />
+                  <TextField fx:id="input_Description" layoutX="14.0" layoutY="46.0" prefHeight="39.0" prefWidth="357.0" promptText="Enter Description" />
+                  <TextField fx:id="input_TaskID" layoutX="14.0" layoutY="92.0" prefHeight="39.0" prefWidth="357.0" promptText="Enter ID" />
+                  <Button layoutX="155.0" layoutY="145.0" mnemonicParsing="false" onAction="#addTask" prefHeight="39.0" prefWidth="75.0" text="ADD TASK" />
                </children>
             </Pane>
             <TableView fx:id="taskTable" layoutY="272.0" prefHeight="285.0" prefWidth="385.0">
               <columns>
                 <TableColumn fx:id="columnTaskId" prefWidth="50.0" text="#" />
-                <TableColumn fx:id="columnTaskTitle" prefWidth="165.0" text="TASK NAME" />
-                  <TableColumn fx:id="columnTaskDescription" prefWidth="169.0" text="DESCRIPTION" />
+                <TableColumn fx:id="columnTaskTitle" prefWidth="114.0" text="TASK NAME" />
+                  <TableColumn fx:id="columnTaskDescription" prefWidth="220.0" text="DESCRIPTION" />
               </columns>
             </TableView>
             <Pane layoutY="557.0" prefHeight="100.0" prefWidth="385.0">
                <children>
-                  <TextField fx:id="input_TaskID2" layoutX="14.0" layoutY="31.0" prefHeight="39.0" prefWidth="243.0" promptText="Enter ID " />
-                  <Button layoutX="296.0" layoutY="31.0" mnemonicParsing="false" onAction="#deleteTask" prefHeight="39.0" prefWidth="75.0" text="DELETE" />
+                  <Button layoutX="252.0" layoutY="11.0" mnemonicParsing="false" onAction="#deleteTask" prefHeight="39.0" prefWidth="75.0" text="DELETE" />
+                  <Button layoutX="81.0" layoutY="11.0" mnemonicParsing="false" onAction="#editTask" prefHeight="39.0" prefWidth="75.0" text="UPDATE" />
                </children>
             </Pane>
          </children>
