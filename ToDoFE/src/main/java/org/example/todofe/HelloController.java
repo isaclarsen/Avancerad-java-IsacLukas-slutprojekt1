@@ -77,10 +77,6 @@ public class HelloController {
                         os.write(toDoJson.getBytes());
                         os.flush();
                     }
-//                    int responseCode = connection.getResponseCode();
-//                    String responseMessage = connection.getResponseMessage();
-////                    System.out.println("Response Code: " + responseCode);
-////                    System.out.println("Response Message: " + responseMessage);
 
                     if (connection.getResponseCode() == 201) {
                         try (InputStream is = connection.getInputStream()) {
@@ -116,10 +112,6 @@ public class HelloController {
                         input_TaskID.clear();
                         input_Description.clear();
 
-//                    } else {
-//                        InputStream errorStream = connection.getErrorStream();
-//                        String errorResponse = errorStream != null ? readResponse(connection) : "No response body available.";
-//                        showErrorMessage("Failed to add task: " + errorResponse);
                     }
 
                 } catch (NumberFormatException e) {
@@ -143,13 +135,46 @@ public class HelloController {
         }
 
         @FXML
-        void editTask(javafx.event.ActionEvent actionEvent ) {
+        void editTask(javafx.event.ActionEvent actionEvent) {
+            try {
+                Task selectedTask = taskTable.getSelectionModel().getSelectedItem();
+                if (selectedTask == null) {
+                    showErrorMessage("Please select a task.");
+                    return;
+                }
+                String updatedTaskJson = String.format(
+                        "{\"id\":%d,\"title\":\"%s\",\"description\":\"%s\"}",
+                        selectedTask.getId(), selectedTask.getTitle(), selectedTask.getDescription());
 
+                URL url = new URL("http://localhost:8080/api/tasks/" + selectedTask.getId());
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("PUT");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setDoOutput(true);
 
+                try (OutputStream os = connection.getOutputStream()) {
+                    os.write(updatedTaskJson.getBytes());
+                    os.flush();
+                }
+                int responseCode = connection.getResponseCode();
+                if (responseCode == 200) {
+                    taskTable.refresh();
+                    System.out.println("Task updated successfully");
+                } else {
+                    String errorResponse = readResponse(connection);
+                    showErrorMessage("Failed to update task: " + errorResponse);
+                }
 
-
-
+            } catch (IOException e){
+                showErrorMessage("Network error " + e.getMessage());
+                e.printStackTrace();
+            } catch (Exception e) {{
+                showErrorMessage("Unexpected error " + e.getMessage());
+                e.printStackTrace();
+            }}
         }
+
 
         private String readResponse(HttpURLConnection connection) throws IOException {
             InputStream stream = connection.getInputStream();
@@ -190,21 +215,23 @@ public class HelloController {
             columnTaskDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
             columnTaskTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
 
-//      Lade in detta efter jag blev klar med addTask metoden
-//            columnTaskTitle.setCellFactory(TextFieldTableCell.forTableColumn());
-//            columnTaskTitle.setOnEditCommit(event -> {
-//                Task editedTask = event.getRowValue();
-//                editedTask.setTitle(event.getNewValue());
-//                editTask(editedTask);
-//            });
-//
-//            columnTaskDescription.setCellFactory(TextFieldTableCell.forTableColumn());
-//            columnTaskDescription.setOnEditCommit(event -> {
-//                Task editedTask = event.getRowValue();
-//                editedTask.setDescription(event.getNewValue());
-//                editTask(editedTask);
-//            });
+            columnTaskId.setEditable(false);
+
+            columnTaskTitle.setCellFactory(TextFieldTableCell.forTableColumn());
+            columnTaskTitle.setOnEditCommit(event -> {
+                Task editedTask = event.getRowValue();
+                editedTask.setTitle(event.getNewValue());
+
+            });
+
+            columnTaskDescription.setCellFactory(TextFieldTableCell.forTableColumn());
+            columnTaskDescription.setOnEditCommit(event -> {
+                Task editedTask = event.getRowValue();
+                editedTask.setDescription(event.getNewValue());
+
+            });
             taskTable.setItems(taskList);
+            taskTable.setEditable(true);
             System.out.println("Task list initialized with " + taskList.size() + " tasks.");
 
         }
