@@ -54,6 +54,7 @@ public class HelloController {
 
                     if (taskTitle.isEmpty() || description.isEmpty()) {
                         showErrorMessage("Please fill in both the task name and description. ");
+                        input_errorWindow.setText("Please fill in both the task name and description. ");
                         return;
                     }
 
@@ -98,11 +99,13 @@ public class HelloController {
                         InputStream errorStream = connection.getErrorStream();
                         String errorResponse = errorStream != null ? readResponse(connection) : "No response body available.";
                         showErrorMessage("Failed to add task: " + errorResponse);
+                        input_errorWindow.setText("Failed to add task: " + errorResponse);
                     }
                     if (connection.getResponseCode() == 200 && connection.getResponseCode() < 300) {
                         Task newTask = new Task(taskId, taskTitle, description);
                         taskList.add(newTask);
                         System.out.println("Added task: " + newTask.getTitle());
+                        input_errorWindow.setText("Added task: " + newTask.getTitle());
 
                         input_Task.clear();
                         input_TaskID.clear();
@@ -112,12 +115,15 @@ public class HelloController {
 
                 } catch (NumberFormatException e) {
                     showErrorMessage("Task Id must be a valid number. ");
+                    input_errorWindow.setText("Task Id must be a valid number.");
                     e.printStackTrace();
                 } catch (IOException e) {
                     showErrorMessage("Network error " + e.getMessage());
+                    input_errorWindow.setText("Network error " + e.getMessage());
                     e.printStackTrace();
                 } catch (Exception e) {
                     showErrorMessage("Unexpected error " + e.getMessage());
+                    input_errorWindow.setText("Unexpected error " + e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -130,6 +136,7 @@ public class HelloController {
             Task selectedTask = taskTable.getSelectionModel().getSelectedItem();
             if (selectedTask == null) {
                 showErrorMessage("No task selected. Please select a task to delete.");
+                input_errorWindow.setText("No task selected. Please select a task to delete.");
                 return;
             }
             //Skapa en variabel som sparar ID från tasken man har markerat
@@ -143,13 +150,17 @@ public class HelloController {
                 if (connection.getResponseCode() == 200 || connection.getResponseCode() == 204) {
                     taskList.remove(selectedTask);
                     System.out.println("Task with ID: " + taskId + " deleted successfully.");
+                    input_errorWindow.setText("Task with ID: " + taskId + " deleted successfully.");
                 } else {
                     String errorResponse = readResponse(connection);
                     showErrorMessage("Failed to delete task. Error: " + errorResponse);
+                    input_errorWindow.setText("Failed to delete task. Error: " + errorResponse);
+                    input_errorWindow.setText("Failed to delete task. Error: " + errorResponse);
                 }
 
             } catch (IOException e) {
                 showErrorMessage("Network error while deleting task: " + e.getMessage());
+                input_errorWindow.setText("Network error while deleting task: " + e.getMessage());
             }
         }
 
@@ -159,6 +170,7 @@ public class HelloController {
                 Task selectedTask = taskTable.getSelectionModel().getSelectedItem();
                 if (selectedTask == null) {
                     showErrorMessage("Please select a task.");
+                    input_errorWindow.setText("Please select a task.");
                     return;
                 }
                 String updatedTaskJson = String.format(
@@ -180,16 +192,20 @@ public class HelloController {
                 if (responseCode == 200) {
                     taskTable.refresh();
                     System.out.println("Task updated successfully");
+                    input_errorWindow.setText("Task updated successfully.");
                 } else {
                     String errorResponse = readResponse(connection);
                     showErrorMessage("Failed to update task: " + errorResponse);
+                    input_errorWindow.setText("Failed to update task. Error: " + errorResponse);
                 }
 
             } catch (IOException e){
                 showErrorMessage("Network error " + e.getMessage());
+                input_errorWindow.setText("Network error " + e.getMessage());
                 e.printStackTrace();
             } catch (Exception e) {{
                 showErrorMessage("Unexpected error " + e.getMessage());
+                input_errorWindow.setText("Unexpected error " + e.getMessage());
                 e.printStackTrace();
             }}
         }

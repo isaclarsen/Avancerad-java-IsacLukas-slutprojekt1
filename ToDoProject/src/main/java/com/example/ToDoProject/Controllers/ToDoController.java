@@ -16,8 +16,7 @@ public class ToDoController {
     private List<ToDo> toDos = new ArrayList<>();
 
     public ToDoController() {
-    toDos.add(new ToDo(1, "Buy ice cream", "Go to store"));
-    toDos.add(new ToDo(2, "Read a book", "Read 50 pages of Harry Potter"));
+    //Om man vill lägga in tasks manuellt:
     }
 
     //Get för alla tasks
