@@ -38,7 +38,7 @@ Syftet med detta projekt är att skapa en enkel applikation för att hantera upp
 
 
 
-## API Reference
+## API Anrop
 
 #### Get all tasks
 
