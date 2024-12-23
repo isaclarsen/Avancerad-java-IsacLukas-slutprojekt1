@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -29,6 +30,9 @@ public class HelloController {
 
         @FXML
         private TableColumn<Task, String> columnTaskTitle;
+
+        @FXML
+        private TextArea input_errorWindow;
 
         @FXML
         private TextField input_Task;
@@ -239,8 +243,4 @@ public class HelloController {
         private void showErrorMessage(String message) {
             System.err.println(message);
         }
-
-
 }
-
-
