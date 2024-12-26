@@ -1,5 +1,7 @@
 package org.example.todofe;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,9 +12,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
+import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 public class HelloController {
 
@@ -254,7 +258,40 @@ public class HelloController {
             taskTable.setEditable(true);
             System.out.println("Task list initialized with " + taskList.size() + " tasks.");
 
+            loadTasksFromBackend();
+
         }
+    private void loadTasksFromBackend() {
+        try {
+            URL url = new URL("http://localhost:8080/api/tasks");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept", "application/json");
+
+            if (connection.getResponseCode() == 200) {
+                try (InputStream is = connection.getInputStream();
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+
+                    String json = response.toString();
+                    ObjectMapper objectMapper = new ObjectMapper(); // använder Jackson library
+                    List<Task> tasks = objectMapper.readValue(json, new TypeReference<List<Task>>() {});
+                    taskList.setAll(tasks);
+                    System.out.println("Tasks loaded: " + tasks.size());
+                }
+            } else {
+                showErrorMessage("Failed to fetch tasks: HTTP " + connection.getResponseCode());
+            }
+        } catch (IOException e) {
+            showErrorMessage("Error loading tasks: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
         private void showErrorMessage(String message) {
             System.err.println(message);
