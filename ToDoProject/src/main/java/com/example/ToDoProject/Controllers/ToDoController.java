@@ -1,10 +1,13 @@
 package com.example.ToDoProject.Controllers;
 
+import com.example.ToDoProject.Models.FileHandler;
 import com.example.ToDoProject.Models.ToDo;
+import com.example.ToDoProject.Models.ToDoFileHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +17,11 @@ import java.util.List;
 public class ToDoController {
     //Lägg in datastrukut (Arraylist tror jag)
     private List<ToDo> toDos = new ArrayList<>();
+    private ToDoFileHandler fileHandler;
 
     public ToDoController() {
-    //Om man vill lägga in tasks manuellt:
+        this.fileHandler = new ToDoFileHandler("todos.dat");
+        this.toDos = fileHandler.readFromFile();
     }
 
     //Get för alla tasks
@@ -42,6 +47,7 @@ public class ToDoController {
     public ResponseEntity<ToDo> createTask(@RequestBody ToDo toDo){
         if (toDo.getId() != 0) {
             toDos.add(toDo);
+            fileHandler.saveToFile(toDos);
             System.out.println("Task created: " + toDo);
             return new ResponseEntity<>(toDo, HttpStatus.CREATED);
         }
@@ -72,6 +78,7 @@ public class ToDoController {
             }
         }
         if (removed) {
+            fileHandler.saveToFile(toDos);
             return ResponseEntity.ok("Task with ID: " + id + " was deleted!");
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task with ID: " + id + " was not deleted!");
