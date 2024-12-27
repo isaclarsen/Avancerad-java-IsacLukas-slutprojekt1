@@ -48,20 +48,23 @@ public class HelloController {
         private ObservableList<Task> taskList = FXCollections.observableArrayList();
 
 
+        // Metod för att lägga till en task i tabellen.
         @FXML
         void addTask(javafx.event.ActionEvent actionEvent) {
 
-                try {
+                try {// Hämta data från input fält
                     String taskTitle = input_Task.getText();
                     String description = input_Description.getText();
                     int taskId = Integer.parseInt(input_TaskID.getText());
 
+                    //Kontrollera att nödvändiga fält är ifyllda
                     if (taskTitle.isEmpty() || description.isEmpty()) {
                         showErrorMessage("Please fill in both the task name and description. ");
                         input_errorWindow.setText("Please fill in both the task name and description. ");
                         return;
                     }
 
+                    // Skapa och konfigurera en HTTP POST-anslutning
                     URL url = new URL("http://localhost:8080/api/tasks");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
@@ -69,6 +72,7 @@ public class HelloController {
                     connection.setRequestProperty("Accept", "application/json");
                     connection.setDoOutput(true);
 
+                    // Konvertera till JSON och skicka till backend
                     String toDoJson = String.format(
                             "{\"id\":%d,\"title\":\"%s\",\"description\":\"%s\"}",
                             taskId, taskTitle, description);
@@ -79,6 +83,7 @@ public class HelloController {
                         os.flush();
                     }
 
+                    // Hantera serverns svar
                     if (connection.getResponseCode() == 201) {
                         try (InputStream is = connection.getInputStream()) {
                             String response2 = new BufferedReader(new InputStreamReader(is))
@@ -88,6 +93,7 @@ public class HelloController {
                             if (!response2.isEmpty()) {
                                 System.out.println("Response body: " + response2);
 
+                                // Lägger till tasken i tabellen lokalt
                                 Task newTask = new Task(taskId, taskTitle, description);
                                 taskList.add(newTask);
                             } else {
@@ -230,7 +236,7 @@ public class HelloController {
             }
         }
 
-
+        // Initialiserar tabellen vid start
         @FXML
         public void initialize(){ // Fick kolla på en video för att implementera denna metod för taskTable
 
@@ -261,6 +267,7 @@ public class HelloController {
             loadTasksFromBackend();
 
         }
+
     private void loadTasksFromBackend() {
         try {
             URL url = new URL("http://localhost:8080/api/tasks");
