@@ -19,7 +19,7 @@ public class ToDoFileHandler extends FileHandler<ToDo> {
         }
     }
 
-    @SuppressWarnings("unchecked")
+
     @Override
     public List<ToDo> readFromFile() {
         File file = new File(filepath);
@@ -28,14 +28,13 @@ public class ToDoFileHandler extends FileHandler<ToDo> {
         }
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filepath))) {
             Object obj = ois.readObject();
-            if (obj instanceof List<?>) {
-                List<?> tempList = (List<?>) obj;
-                if (!tempList.isEmpty() && !(tempList.get(0) instanceof ToDo)) {
-                    throw new IOException("Data in file is not a valid List<ToDo>");
+            if (obj instanceof List<?> tempList) {
+                if (!tempList.isEmpty() && !(tempList.getFirst() instanceof ToDo)) {
+                    throw new IOException("Data in file is not a valid List");
                 }
                 return (List<ToDo>) tempList;
             } else {
-                throw new IOException("Data in file is not a valid List<ToDo>");
+                throw new IOException("Data in file is not a valid List");
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException("Failed to read tasks from file: " + filepath, e);

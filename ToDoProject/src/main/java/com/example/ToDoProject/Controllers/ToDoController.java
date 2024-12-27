@@ -1,13 +1,13 @@
 package com.example.ToDoProject.Controllers;
 
-import com.example.ToDoProject.Models.FileHandler;
+
 import com.example.ToDoProject.Models.ToDo;
 import com.example.ToDoProject.Models.ToDoFileHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/tasks")
 
 public class ToDoController {
-    //Lägg in datastrukut (Arraylist tror jag)
+    //Lägg in datastruktur (Arraylist tror jag)
     private List<ToDo> toDos = new ArrayList<>();
     private ToDoFileHandler fileHandler;
 
